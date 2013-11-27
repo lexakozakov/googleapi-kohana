@@ -29,8 +29,6 @@ class GoogleAPI_Client extends Google_Client {
 			throw new Kohana_Kohana_Exception('You must fill the developer_key in the config file');
 		}
 		
-		@session_start();
-		
 		parent::__construct($this->config->as_array()); 
 		
 		$this->setApprovalPrompt("auto");
@@ -42,14 +40,14 @@ class GoogleAPI_Client extends Google_Client {
 
 	function authenticateCode($code = null)
 	{
-		if (empty($_SESSION[GClient::$token_name]))
+		if ( !Session::instance()->get(GClient::$token_name) )
 		{
 			$this->authenticate($code);
-			$_SESSION[GClient::$token_name] = $this->getAccessToken();
+			Session::instance()->set(GClient::$token_name, $this->getAccessToken());
 		}
 		else 
 		{
-			$this->setAccessToken($_SESSION[GClient::$token_name]);
+			$this->setAccessToken(Session::instance()->get(GClient::$token_name));
 		}
 	}
 

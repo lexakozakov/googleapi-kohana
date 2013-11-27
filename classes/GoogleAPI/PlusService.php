@@ -14,8 +14,6 @@ class GoogleAPI_PlusService extends Google_PlusService {
 	{
 		$this->client = new GClient();
 		
-		@session_start();
-		
 		parent::__construct($this->client);
 		
 		$this->client->authenticateCode();
@@ -37,7 +35,7 @@ class GoogleAPI_PlusService extends Google_PlusService {
 	{
 		if ($token = $this->client->getAccessToken())
 		{
-			$_SESSION[GClient::$token_name] = $token;
+			Session::instance()->set(GClient::$token_name, $token);
 			return true;
 		}
 		return false;
